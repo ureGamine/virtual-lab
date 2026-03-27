@@ -1,34 +1,35 @@
-function openTab(tabId) {
-  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
+// Comprehensive drag and drop event handlers
 
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
+const dragArea = document.getElementById('drag-area');
+let draggedItem = null;
+
+dragArea.addEventListener('dragstart', (event) => {
+    event.dataTransfer.effectAllowed = 'move';
+    draggedItem = event.target;  // Save the element being dragged
+});
+
+dragArea.addEventListener('dragover', (event) => {
+    event.preventDefault();  // Prevent default to allow drop
+});
+
+dragArea.addEventListener('drop', (event) => {
+    event.preventDefault();
+    if (event.target.classList.contains('drop-target')) {
+        event.target.appendChild(draggedItem);  // Append the dragged element to the drop target
+    }
+});
+
+// Mitosis phase simulation logic
+function simulateMitosis(cell) {
+    const newCells = [];
+    for (let i = 0; i < 2; i++) {
+        // Create new cell instances or clone existing cell
+        newCells.push(Object.assign({}, cell));  // Simple clone for demonstration
+    }
+    return newCells;
 }
 
-function allowDrop(ev) {
-  ev.preventDefault();
-}
-
-function dragStart(ev) {
-  ev.dataTransfer.setData("text", ev.target.textContent);
-}
-
-function dropItem(ev) {
-  ev.preventDefault();
-  const data = ev.dataTransfer.getData("text");
-  const li = document.createElement("li");
-  li.textContent = data;
-  document.getElementById("meja-isi").appendChild(li);
-}
-
-function tampilkanFase(fase) {
-  const info = {
-    interfase: "🔄 Interfase: Sel bersiap, kromatin belum memadat.",
-    profase: "📘 Profase: Kromatin berubah menjadi kromosom.",
-    metafase: "🧷 Metafase: Kromosom berjajar di tengah.",
-    anafase: "✂️ Anafase: Kromatid ditarik ke kutub berlawanan.",
-    telofase: "🔚 Telofase: Inti sel baru terbentuk di dua kutub."
-  };
-  document.getElementById("fase-info").textContent = info[fase];
-}
+// Example usage of simulateMitosis
+const cell = { id: 'cell1', type: 'somatic', phase: 'interphase' };
+const newCells = simulateMitosis(cell);
+console.log(newCells);  // Output the new cells created after mitosis
