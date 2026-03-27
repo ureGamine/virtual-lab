@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Mitosis Simulation</title>
+</head>
+<body>
+    <h1>Mitosis Simulation</h1>
+    <div id="work-table" class="drop-zone">Work Table - Drag equipment here</div>
+    <div id="tools">
+        <div class="draggable" draggable="true">🔬 Mikroskop</div>
+        <div class="draggable" draggable="true">🧪 Pipet</div>
+        <div class="draggable" draggable="true">🍽️ Cawan Petri</div>
+        <div class="draggable" draggable="true">📍 Pinset</div>
+        <div class="draggable" draggable="true">🧫 Sampel</div>
+    </div>
+    <div id="phase-buttons">
+        <button id="interfase">Interfase</button>
+        <button id="profase">Profase</button>
+        <button id="metafase">Metafase</button>
+        <button id="anafase">Anafase</button>
+        <button id="telofase">Telofase</button>
+    </div>
+    <div id="phase-description"></div>
+    <button id="reset">Reset</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 20px;
+    }
+    .drop-zone {
+        width: 300px;
+        height: 300px;
+        border: 2px dashed #ccc;
+        margin: 20px;
+        position: relative;
+    }
+    .draggable {
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #000;
+        cursor: move;
+    }
+    .draggable.dragging {
+        opacity: 0.5;
+    }
+    #phase-buttons {
+        margin: 20px;
+    }
+    #reset {
+        margin-top: 20px;
+    }
+</style>
+
+<script>
+    const draggables = document.querySelectorAll('.draggable');
+    const dropZone = document.getElementById('work-table');
+    const phaseDescription = document.getElementById('phase-description');
+    const resetButton = document.getElementById('reset');
+
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', () => {
+            draggable.classList.add('dragging');
+        });
+
+        draggable.addEventListener('dragend', () => {
+            draggable.classList.remove('dragging');
+        });
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('hovered');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('hovered');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const dragging = document.querySelector('.dragging');
+        dropZone.appendChild(dragging);
+        dropZone.classList.remove('hovered');
+    });
+
+    const phases = {
+        interfase: "The cell is in its resting phase, preparing for division.",
+        profase: "The chromosomes become visible, and the nuclear envelope breaks down.",
+        metafase: "The chromosomes line up in the middle of the cell.",
+        anafase: "The sister chromatids are pulled apart to opposite ends of the cell.",
+        telofase: "The cell prepares to divide, and the nuclear envelope re-forms.",
+    };
+
+    Object.keys(phases).forEach(phase => {
+        document.getElementById(phase).addEventListener('click', () => {
+            phaseDescription.innerText = phases[phase];
+        });
+    });
+
+    resetButton.addEventListener('click', () => {
+        dropZone.innerHTML = 'Work Table - Drag equipment here';
+        phaseDescription.innerText = '';
+    });
+</script>
